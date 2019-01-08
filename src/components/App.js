@@ -15,9 +15,6 @@ export default class App extends Component {
 
   handleDataInput(event) {
     this.setState({data: this.parseData(event.target.value)});
-    // this.setState({selectedTeams: ['Boston Celtics, Golden State Warriors']})
-    // this.handleTeamSelect('Boston Celtics')
-    console.log(this.state.data);
   }
 
   parseData(data) {
@@ -55,7 +52,6 @@ export default class App extends Component {
     
     // selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
     // this.setState({selectedTeams: selectedTeams});
-    // console.log(this.state.selectedTeams);
 
     let plotData = this.state.plotData;
 
@@ -66,7 +62,6 @@ export default class App extends Component {
     }
 
     this.setState({plotData: plotData});
-    // console.log(this.state.plotData);
   }
 
   render() {
