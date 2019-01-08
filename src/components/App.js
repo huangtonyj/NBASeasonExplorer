@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Chart from './Chart';
 
 export default class App extends Component {
 
@@ -39,48 +40,64 @@ export default class App extends Component {
       return result;
     }
 
-    this.setState({data: parseData(event.target.value)});
-    this.updatePlotData();
+    this.setState({data: parseData(event.target.value)}, () => this.updatePlotData());
+  }
+
+  handleHomeOrAwayRadioBtns(e) {
+    this.setState({homeOrAway: e.target.value}, () => this.updatePlotData());
   }
 
   handleTeamSelect(team) {
     const selectedTeams = this.state.selectedTeams
-    
     selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
-    this.setState({selectedTeams: selectedTeams});
-    this.updatePlotData();
+    this.setState({selectedTeams: selectedTeams}, () => this.updatePlotData());
   }
 
   updatePlotData() {
     const plotData = {};
+    console.log('plotData', plotData)
 
-    this.state.selectedTeams.forEach((team) => { plotData[team] = this.state.data[team]; })
+    this.state.selectedTeams.forEach((team) => { 
+      switch (this.state.homeOrAway) {
+        case 'both':
+          console.log('plot both data');          
+          plotData[team] = Object.assign(this.state.data[team].home, this.state.data[team].away);
+          break;
+        case 'away':
+          console.log('plot away data');          
+          plotData[team] = this.state.data[team].away;
+          break;
+        default:
+          console.log('plot home data');
+          plotData[team] = this.state.data[team].home;
+        }
+    })
 
     this.setState({ plotData: plotData });
   }
 
   render() {
     console.log(this.state);
-    // console.log(this.state.data['Boston Celtics']);   
+    // console.log(this.state.plotData);   
 
     const homeOrAwayRadioBtns = (
       <div>
         <input type="radio" name="homeOrAway" 
           value="both" 
           checked={this.state.homeOrAway === "both" ? "checked" : ""}
-          onChange={() => this.setState({homeOrAway: "both"})}
-        />Both
+          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
+          />Both
 
         <input type="radio" name="homeOrAway" 
-          value="away" 
+          value="home" 
           checked={this.state.homeOrAway === "home" ? "checked" : ""}
-          onChange={() => this.setState({homeOrAway: "home"})}
-        />Home
+          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
+          />Home
 
         <input type="radio" name="homeOrAway" 
           value="away" 
           checked={this.state.homeOrAway === "away" ? "checked" : ""}
-          onChange={() => this.setState({homeOrAway: "away"})}
+          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
         />Away
       </div>
     );
@@ -106,13 +123,17 @@ export default class App extends Component {
           rows = "2"
           cols = "50"
           placeholder="Input data here"
-          onChange={(event) => this.handleDataInput(event)}
+          onChange={(e) => this.handleDataInput(e)}
         >
         </textarea>
 
         {homeOrAwayRadioBtns}
 
         {teamsCheckBox}
+
+        <Chart 
+          plotData={this.state.plotData}
+        />
 
       </div>
     )
