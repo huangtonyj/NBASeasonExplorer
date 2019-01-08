@@ -7,14 +7,15 @@ export default class App extends Component {
     this.state = {
       input: '',
       data: {},
-      selectedTeam: new Set(),
+      selectedTeams: new Set(),
       selectedType: 'both'
     }
   }
 
   handleDataInput(event) {
     this.setState({data: this.parseData(event.target.value)});
-    // this.setState({selectedTeam: ['Boston Celtics, Golden State Warriors']})
+    // this.setState({selectedTeams: ['Boston Celtics, Golden State Warriors']})
+    // this.handleTeamSelect('Boston Celtics')
     console.log(this.state.data);
   }
 
@@ -48,7 +49,13 @@ export default class App extends Component {
     return result;
   }
 
-
+  handleTeamSelect(team) {
+    const selectedTeams = this.state.selectedTeams
+    
+    selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
+    this.setState({selectedTeams: selectedTeams});
+    // console.log(this.state.selectedTeams);
+  }
 
   render() {
 
@@ -59,7 +66,7 @@ export default class App extends Component {
             type = "checkbox"
             name = {team}
             value = {team}
-            onChange = {(e) => this.handleTeamSelect(e)}
+            onChange = {(e) => this.handleTeamSelect(e.target.value)}
           />{team}
         </div>
       )
