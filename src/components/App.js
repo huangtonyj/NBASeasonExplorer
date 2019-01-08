@@ -49,8 +49,21 @@ export default class App extends Component {
   }
 
 
+
   render() {
 
+    let teams = Object.keys(this.state.data).map(team => {
+      return (
+        <div key = {team} >
+          <input
+            type = "checkbox"
+            name = {team}
+            value = {team}
+            onChange = {(e) => this.handleTeamSelect(e)}
+          />{team}
+        </div>
+      )
+    });   
 
     return (
       <div>
