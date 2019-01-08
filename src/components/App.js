@@ -7,7 +7,7 @@ export default class App extends Component {
     this.state = {
       input: '',
       data: {},
-      // selectedTeams: new Set(),
+      selectedTeams: new Set(),
       homeOrAway: 'both',
       plotData: {}
     }
@@ -60,29 +60,30 @@ export default class App extends Component {
       delete result[undefined] // bad data?
       return result;
     }
-    
+
     this.setState({data: parseData(event.target.value)});
+    this.updatePlotData();
   }
 
   handleTeamSelect(team) {
-    // const selectedTeams = this.state.selectedTeams
+    const selectedTeams = this.state.selectedTeams
     
-    // selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
-    // this.setState({selectedTeams: selectedTeams});
+    selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
+    this.setState({selectedTeams: selectedTeams});
+    this.updatePlotData();
+  }
 
-    let plotData = this.state.plotData;
+  updatePlotData() {
+    const plotData = {};
 
-    if (plotData[team]) {
-      delete plotData[team]
-    } else {
-      plotData = Object.assign(plotData, {[team]: this.state.data[team]});
-    }
+    this.state.selectedTeams.forEach((team) => { plotData[team] = this.state.data[team]; })
 
-    this.setState({plotData: plotData});
+    this.setState({ plotData: plotData });
   }
 
   render() {
     console.log(this.state);
+
     
 
     const homeOrAwayRadioBtns = (
