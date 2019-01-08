@@ -14,37 +14,54 @@ export default class App extends Component {
   }
 
   handleDataInput(event) {
-    this.setState({data: this.parseData(event.target.value)});
-  }
+    function parseData(data) {
+      data = data.split('\n');
 
-  parseData(data) {
-    data = data.split('\n');
+      const result = {};
+      let rowData, date, visitorTeam, visitorPts, homeTeam, homePts;
 
-    const result = {};
-    let rowData, date, visitorTeam, visitorPts, homeTeam, homePts;
+      for (let i = 1; i < data.length; i++) {
+        rowData = data[i].split(',');
+        date = rowData[0];
+        visitorTeam = rowData[2];
+        visitorPts = rowData[3]
+        homeTeam = rowData[4];
+        homePts = rowData[5];
 
-    for (let i = 1; i < data.length; i++) {
-      rowData = data[i].split(',');
-      date = rowData[0];
-      visitorTeam = rowData[2];
-      visitorPts = rowData[3]
-      homeTeam = rowData[4];
-      homePts = rowData[5];
+        if (result[visitorTeam]) {
+          result[visitorTeam][date] = {
+            points: visitorPts,
+            homeOrAway: 'visitor'
+          };
+        } else {
+          result[visitorTeam] = {
+            [date]: {
+              points: visitorPts,
+              homeOrAway: 'visitor'
+            }
+          };
+        }
 
-      if (result[visitorTeam]) {
-        result[visitorTeam][date] = {points: visitorPts, homeOrAway: 'visitor'};
-      } else {
-        result[visitorTeam]= {[date]: {points: visitorPts, homeOrAway: 'visitor'}};
+        if (result[homeTeam]) {
+          result[homeTeam][date] = {
+            points: homePts,
+            homeOrAway: 'home'
+          };
+        } else {
+          result[homeTeam] = {
+            [date]: {
+              points: homePts,
+              homeOrAway: 'home'
+            }
+          };
+        }
       }
 
-      if (result[homeTeam]) {
-        result[homeTeam][date] = {points: homePts, homeOrAway: 'home'};
-      } else {
-        result[homeTeam]= {[date]: {points: homePts, homeOrAway: 'home'}};
-      }
+      delete result[undefined] // bad data?
+      return result;
     }
-
-    return result;
+    
+    this.setState({data: parseData(event.target.value)});
   }
 
   handleTeamSelect(team) {
