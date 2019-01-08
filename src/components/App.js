@@ -48,34 +48,9 @@ export default class App extends Component {
     return result;
   }
 
-  handleTeamSelect(event) {
-    const team = event.target.value;
-    const selectedTeams = this.state.selectedTeam
-    if (this.state.selectedTeam.has(team)) {
-      this.setState({selectedTeam: selectedTeams.delete(team)})
-      console.log('it was there');
-    } else {
-      this.setState({selectedTeam: selectedTeams.add(team)})
-      console.log('nada');
-    }
-    console.log(this.state.selectedTeam);
-    
-  }
 
   render() {
 
-    let teams = Object.keys(this.state.data).map(team => {
-      return (
-        <div key = {team} >
-          <input
-            type = "checkbox"
-            name = {team}
-            value = {team}
-            onChange = {(e) => this.handleTeamSelect(e)}
-          />{team}
-        </div>
-      )
-    });   
 
     return (
       <div>
