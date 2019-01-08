@@ -28,33 +28,11 @@ export default class App extends Component {
         homeTeam = rowData[4];
         homePts = rowData[5];
 
-        if (result[visitorTeam]) {
-          result[visitorTeam][date] = {
-            points: visitorPts,
-            homeOrAway: 'visitor'
-          };
-        } else {
-          result[visitorTeam] = {
-            [date]: {
-              points: visitorPts,
-              homeOrAway: 'visitor'
-            }
-          };
-        }
-
-        if (result[homeTeam]) {
-          result[homeTeam][date] = {
-            points: homePts,
-            homeOrAway: 'home'
-          };
-        } else {
-          result[homeTeam] = {
-            [date]: {
-              points: homePts,
-              homeOrAway: 'home'
-            }
-          };
-        }
+        if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
+        if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
+      
+        result[visitorTeam]['away'][date] = visitorPts;
+        result[homeTeam]['home'][date] = homePts;
       }
 
       delete result[undefined] // bad data?
@@ -83,8 +61,7 @@ export default class App extends Component {
 
   render() {
     console.log(this.state);
-
-    
+    // console.log(this.state.data['Boston Celtics']);   
 
     const homeOrAwayRadioBtns = (
       <div>
