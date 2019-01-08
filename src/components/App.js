@@ -7,8 +7,9 @@ export default class App extends Component {
     this.state = {
       input: '',
       data: {},
-      selectedTeams: new Set(),
-      selectedType: 'both'
+      // selectedTeams: new Set(),
+      homeOrAway: 'both',
+      plotData: {}
     }
   }
 
@@ -34,15 +35,15 @@ export default class App extends Component {
       homePts = rowData[5];
 
       if (result[visitorTeam]) {
-        result[visitorTeam][date] = {points: visitorPts, visitorOrHome: 'visitor'};
+        result[visitorTeam][date] = {points: visitorPts, homeOrAway: 'visitor'};
       } else {
-        result[visitorTeam]= {[date]: {points: visitorPts, visitorOrHome: 'visitor'}};
+        result[visitorTeam]= {[date]: {points: visitorPts, homeOrAway: 'visitor'}};
       }
 
       if (result[homeTeam]) {
-        result[homeTeam][date] = {points: homePts, visitorOrHome: 'home'};
+        result[homeTeam][date] = {points: homePts, homeOrAway: 'home'};
       } else {
-        result[homeTeam]= {[date]: {points: homePts, visitorOrHome: 'home'}};
+        result[homeTeam]= {[date]: {points: homePts, homeOrAway: 'home'}};
       }
     }
 
@@ -50,16 +51,51 @@ export default class App extends Component {
   }
 
   handleTeamSelect(team) {
-    const selectedTeams = this.state.selectedTeams
+    // const selectedTeams = this.state.selectedTeams
     
-    selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
-    this.setState({selectedTeams: selectedTeams});
+    // selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
+    // this.setState({selectedTeams: selectedTeams});
     // console.log(this.state.selectedTeams);
+
+    let plotData = this.state.plotData;
+
+    if (plotData[team]) {
+      delete plotData[team]
+    } else {
+      plotData = Object.assign(plotData, {[team]: this.state.data[team]});
+    }
+
+    this.setState({plotData: plotData});
+    // console.log(this.state.plotData);
   }
 
   render() {
+    console.log(this.state);
+    
 
-    let teams = Object.keys(this.state.data).map(team => {
+    const homeOrAwayRadioBtns = (
+      <div>
+        <input type="radio" name="homeOrAway" 
+          value="both" 
+          checked={this.state.homeOrAway === "both" ? "checked" : ""}
+          onChange={() => this.setState({homeOrAway: "both"})}
+        />Both
+
+        <input type="radio" name="homeOrAway" 
+          value="away" 
+          checked={this.state.homeOrAway === "home" ? "checked" : ""}
+          onChange={() => this.setState({homeOrAway: "home"})}
+        />Home
+
+        <input type="radio" name="homeOrAway" 
+          value="away" 
+          checked={this.state.homeOrAway === "away" ? "checked" : ""}
+          onChange={() => this.setState({homeOrAway: "away"})}
+        />Away
+      </div>
+    );
+
+    const teamsCheckBox = Object.keys(this.state.data).map(team => {
       return (
         <div key = {team} >
           <input
@@ -77,14 +113,16 @@ export default class App extends Component {
         <h1> Basketball Season Explorer </h1>
 
         <textarea 
-          rows = "1"
+          rows = "2"
           cols = "50"
           placeholder="Input data here"
           onChange={(event) => this.handleDataInput(event)}
         >
         </textarea>
 
-        {teams}
+        {homeOrAwayRadioBtns}
+
+        {teamsCheckBox}
 
       </div>
     )
