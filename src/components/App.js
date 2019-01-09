@@ -36,11 +36,17 @@ export default class App extends Component {
         // result[visitorTeam]['away'].push({date: new Date(date), pts: parseInt(visitorPts)});
         // result[homeTeam]['home'].push({date: new Date(date), pts: parseInt(homePts)});
 
-        if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
-        if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
+        // if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
+        // if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
       
-        result[visitorTeam]['away'][date] = parseInt(visitorPts);
-        result[homeTeam]['home'][date] = parseInt(homePts);
+        // result[visitorTeam]['away'][date] = parseInt(visitorPts);
+        // result[homeTeam]['home'][date] = parseInt(homePts);
+
+        if (!result[visitorTeam]) { result[visitorTeam] = []}
+        if (!result[homeTeam]) { result[homeTeam] = []}
+
+        result[visitorTeam].push({date: date, pts: visitorPts, homeOrAway: 'away', opponent: homeTeam}) 
+        result[homeTeam].push({ date: date, pts: homePts, homeOrAway: 'home', opponent: visitorTeam}) 
         
       }
 
@@ -62,26 +68,34 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    const theData = {};
-    // let theData;
+    const plotData = {};
+    // let plotData;
     
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
         case 'home':
-          theData[team] = this.state.data[team].home;
+          plotData[team] = this.state.data[team].home;
           break;
         case 'away':
-          theData[team] = this.state.data[team].away;
+          plotData[team] = this.state.data[team].away;
           break;
         default:
-          theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
-          // theData = this.state.data[team].home.concat(this.state.data[team].away);
+          // plotData[team] = this.state.data[team].home.concat(this.state.data[team].away);
+          // plotData = this.state.data[team].home.concat(this.state.data[team].away);
+          
+          this.state.data[team].forEach(game => {
+            if (!plotData[game.date]) {plotData[game.date] = {};}
+            plotData[game.date] = Object.assign( plotData[game.date], {[team]: game.pts})
+          })
+          
+          
+
 
           break;
         }
     })
 
-    this.setState({ plotData: theData });
+    this.setState({ plotData: plotData });
   }
 
   render() {
@@ -123,18 +137,18 @@ export default class App extends Component {
       )
     }); 
     
-    // const lines = Object.keys(this.state.plotData).map((team) => {
-    //   return (
-    //     < Line
-    //       type = "monotone"
-    //       // stroke={null}
-    //       // strokeWidth="2"
-    //       // dot={false}
-    //       stroke = "#8884d8"
-    //       dataKey = "pts"
-    //     />
-    //   )
-    // });
+    const lines = Object.keys(this.state.plotData).map((team) => {
+      return (
+        < Line
+          type = "monotone"
+          // stroke={null}
+          // strokeWidth="2"
+          // dot={false}
+          stroke = "#8884d8"
+          dataKey = "pts"
+        />
+      )
+    });
 
     return (
       <div>
@@ -164,13 +178,13 @@ export default class App extends Component {
           <XAxis dataKey="date"/>
           <YAxis/>
 
-          <Line
+          {/* <Line
             type="monotone"
             stroke = "#8884d8"
             dataKey="pts"
-          />
+          /> */}
 
-          {/* {lines} */}
+          {lines}
 
         </LineChart>
 
