@@ -32,8 +32,8 @@ export default class App extends Component {
         if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
         if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
       
-        result[visitorTeam]['away'].push({date: date, pts: visitorPts});
-        result[homeTeam]['home'].push({date: date, pts: homePts});
+        result[visitorTeam]['away'].push({date: new Date(date), pts: parseInt(visitorPts)});
+        result[homeTeam]['home'].push({date: new Date(date), pts: parseInt(homePts)});
       }
 
       delete result[undefined] // bad data?
@@ -74,7 +74,7 @@ export default class App extends Component {
   }
 
   render() {
-    // console.log('App State', this.state);
+    console.log('App State', this.state);
     // console.log(this.state.plotData);   
 
     const homeOrAwayRadioBtns = (
