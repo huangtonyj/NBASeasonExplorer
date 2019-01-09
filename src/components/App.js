@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
+import moment from 'moment';
 
 export default class App extends Component {
 
@@ -23,8 +24,7 @@ export default class App extends Component {
 
       for (let i = 1; i < data.length; i++) {
         rowData = data[i].split(',');
-        // date = new Date(rowData[0]);
-        date = rowData[0];
+        date = new Date(rowData[0]).getTime();
         visitorTeam = rowData[2];
         visitorPts = rowData[3]
         homeTeam = rowData[4];
@@ -58,7 +58,12 @@ export default class App extends Component {
     let plotData = {};
 
     Array.from(this.state.selectedTeams).forEach(team => {
-      plotData = Object.assign(plotData, {[team]: this.state.data[team]});
+      const homeOrAway = this.state.homeOrAway;
+      let filteredData = this.state.data[team];
+      if (homeOrAway !== 'both') {
+        filteredData = filteredData.filter(game => game.homeOrAway === homeOrAway);
+      }
+      plotData = Object.assign(plotData, { [team]: filteredData});
     });
 
     this.setState({ plotData: plotData });
@@ -109,7 +114,7 @@ export default class App extends Component {
           name={team}
           data={this.state.plotData[team]}
           fill="#8884d8"
-          line shape="cross"
+          line
         />
       )
     });
@@ -130,13 +135,18 @@ export default class App extends Component {
 
         {teamsCheckBox}
 
-        <ScatterChart
-          width={700}
-          height={600}
-        >
+        <ScatterChart width={700} height={600}>
 
-          <XAxis dataKey="date" />
+          <XAxis
+            dataKey='date'
+            domain={['auto', 'auto']}
+            name='Date'
+            tickFormatter={(unixTime) => moment(unixTime).format('MMM Do YY')}
+            type='number'
+          />
+
           <YAxis dataKey="pts"/>
+
           <Legend/>
 
           {scatters}
