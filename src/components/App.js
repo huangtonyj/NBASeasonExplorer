@@ -28,12 +28,6 @@ export default class App extends Component {
         visitorPts = rowData[3]
         homeTeam = rowData[4];
         homePts = rowData[5];
-
-        // if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
-        // if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
-      
-        // result[visitorTeam]['away'][date] = visitorPts;
-        // result[homeTeam]['home'][date] = homePts;
         
         if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
         if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
@@ -60,61 +54,21 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    
-    // console.log('theData', theData)
-
     const theData = {};
+    
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
         case 'home':
-          // console.log('plot home data');
-          // theData[team] = this.state.data[team].home;
           theData[team] = this.state.data[team].home;
           break;
         case 'away':
-          // console.log('plot away data');          
-          // theData[team] = Object.values(this.state.data[team].away);
           theData[team] = this.state.data[team].away;
           break;
         default:
-          // console.log('plot both data');          
-          // theData[team] = Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home));
-          
-            theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
-            // date: Object.keys(this.state.data[team].away).concat(Object.keys(this.state.data[team].home)),
-            // pts: Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home))
-        
+          theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
           break;
         }
     })
-    // this.state.selectedTeams.forEach((team) => { 
-    //   switch (this.state.homeOrAway) {
-    //     case 'home':
-    //       // console.log('plot home data');
-    //       // theData[team] = this.state.data[team].home;
-    //       theData[team] = {
-    //         date: Object.keys(this.state.data[team].home),
-    //         pts: Object.values(this.state.data[team].home)
-    //       }
-    //       break;
-    //     case 'away':
-    //       // console.log('plot away data');          
-    //       // theData[team] = Object.values(this.state.data[team].away);
-    //       theData[team] = {
-    //         date: Object.keys(this.state.data[team].away),
-    //         pts: Object.values(this.state.data[team].away)
-    //       }
-    //       break;
-    //     default:
-    //       // console.log('plot both data');          
-    //       // theData[team] = Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home));
-    //       theData[team] = {
-    //         date: Object.keys(this.state.data[team].away).concat(Object.keys(this.state.data[team].home)),
-    //         pts: Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home))
-    //       }
-    //       break;
-    //     }
-    // })
 
     this.setState({ plotData: theData });
   }
