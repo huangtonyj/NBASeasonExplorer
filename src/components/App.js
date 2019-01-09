@@ -30,11 +30,18 @@ export default class App extends Component {
         homeTeam = rowData[4];
         homePts = rowData[5];
         
-        if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
-        if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
+        // if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
+        // if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
       
-        result[visitorTeam]['away'].push({date: new Date(date), pts: parseInt(visitorPts)});
-        result[homeTeam]['home'].push({date: new Date(date), pts: parseInt(homePts)});
+        // result[visitorTeam]['away'].push({date: new Date(date), pts: parseInt(visitorPts)});
+        // result[homeTeam]['home'].push({date: new Date(date), pts: parseInt(homePts)});
+
+        if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
+        if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
+      
+        result[visitorTeam]['away'][date] = parseInt(visitorPts);
+        result[homeTeam]['home'][date] = parseInt(homePts);
+        
       }
 
       delete result[undefined] // bad data?
@@ -55,8 +62,8 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    // const theData = {};
-    let theData;
+    const theData = {};
+    // let theData;
     
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
@@ -67,8 +74,9 @@ export default class App extends Component {
           theData[team] = this.state.data[team].away;
           break;
         default:
-          // theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
-          theData = this.state.data[team].home.concat(this.state.data[team].away);
+          theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
+          // theData = this.state.data[team].home.concat(this.state.data[team].away);
+
           break;
         }
     })
