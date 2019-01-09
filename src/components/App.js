@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {LineChart, XAxis, YAxis, Line} from 'recharts';
+// import {LineChart, XAxis, YAxis, Line, Legend} from 'recharts';
+import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
 
 export default class App extends Component {
 
@@ -23,7 +24,7 @@ export default class App extends Component {
 
       for (let i = 1; i < data.length; i++) {
         rowData = data[i].split(',');
-        date = rowData[0];
+        date = new Date(rowData[0]).getTime();
         visitorTeam = rowData[2];
         visitorPts = rowData[3]
         homeTeam = rowData[4];
@@ -55,24 +56,34 @@ export default class App extends Component {
 
   updatePlotData() {
     let plotData = {};
+
+    Array.from(this.state.selectedTeams).forEach(team => {
+      plotData = Object.assign(plotData, {[team]: this.state.data[team]});
+    });
     
-    this.state.selectedTeams.forEach((team) => { 
-      switch (this.state.homeOrAway) {
-        case 'home':
-          plotData[team] = this.state.data[team].home;
-          break;
-        case 'away':
-          plotData[team] = this.state.data[team].away;
-          break;
-        default:          
-          this.state.data[team].forEach(game => {
-            if (!plotData[game.date]) {plotData[game.date] = {};}
-            plotData[game.date] = Object.assign( plotData[game.date], {[team]: game.pts})
-          })
-        }
-    })
+    // this.state.selectedTeams.forEach((team) => { 
+    //   switch (this.state.homeOrAway) {
+    //     case 'home':
+    //       this.state.data[team].forEach(game => {
+    //         if (!plotData[game.date]) {plotData[game.date] = {};}
+    //         if (game.homeOrAway === "home") {
+    //           plotData[game.date] = Object.assign( plotData[game.date], {[team]: game.pts})
+    //         }
+    //       })
+    //       break;
+    //     case 'away':
+    //       plotData[team] = this.state.data[team].away;
+    //       break;
+    //     default:          
+    //       this.state.data[team].forEach(game => {
+    //         if (!plotData[game.date]) {plotData[game.date] = {};}
+    //         plotData[game.date] = Object.assign( plotData[game.date], {[team]: game.pts})
+    //       })
+    //     }
+    // })
     
-    plotData = Object.keys(plotData).map((date) => Object.assign({date: date}, plotData[date]));
+    // plotData = Object.keys(plotData).map((date) => Object.assign({date: date}, plotData[date]));
+    // plotData = plotData.sort(el => el.date)
 
     this.setState({ plotData: plotData });
   }
@@ -115,12 +126,23 @@ export default class App extends Component {
       )
     }); 
 
-    const lines = Array.from(this.state.selectedTeams).map((team) => {
+    // const lines = Array.from(this.state.selectedTeams).map((team) => {
+    //   return (
+    //     <Scatter
+    //       key={team}
+    //       type="monotone"
+    //       // stroke="#8884d8"
+    //       dataKey={team}
+    //     />
+    //   )
+    // });
+    const scatters = Array.from(this.state.selectedTeams).map((team) => {
       return (
-        <Line
-          type="monotone"
-          stroke="#8884d8"
-          dataKey={team}
+        <Scatter
+          name={team}
+          data={this.state.plotData[team]}
+          fill="#8884d8"
+          line shape="cross"
         />
       )
     });
@@ -141,17 +163,18 @@ export default class App extends Component {
 
         {teamsCheckBox}
 
-        <LineChart
+        <ScatterChart
           width={700}
           height={600}
-          data={this.state.plotData}>
+        >
 
-          <XAxis dataKey="date"/>
-          <YAxis/>
+          <XAxis dataKey="date" />
+          <YAxis dataKey="pts"/>
+          <Legend/>
 
-          {lines}
+          {scatters}
           
-        </LineChart>
+        </ScatterChart>
 
       </div>
     )
