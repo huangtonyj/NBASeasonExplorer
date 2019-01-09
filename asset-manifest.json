@@ -1,0 +1,11 @@
+{
+  "main.js": "/NBASeasonExplorer/static/js/main.7e2b47c7.chunk.js",
+  "main.js.map": "/NBASeasonExplorer/static/js/main.7e2b47c7.chunk.js.map",
+  "static/js/1.b0d959a6.chunk.js": "/NBASeasonExplorer/static/js/1.b0d959a6.chunk.js",
+  "static/js/1.b0d959a6.chunk.js.map": "/NBASeasonExplorer/static/js/1.b0d959a6.chunk.js.map",
+  "runtime~main.js": "/NBASeasonExplorer/static/js/runtime~main.2a79748b.js",
+  "runtime~main.js.map": "/NBASeasonExplorer/static/js/runtime~main.2a79748b.js.map",
+  "index.html": "/NBASeasonExplorer/index.html",
+  "precache-manifest.d880dc31af18b3d7f602f25a200a47e4.js": "/NBASeasonExplorer/precache-manifest.d880dc31af18b3d7f602f25a200a47e4.js",
+  "service-worker.js": "/NBASeasonExplorer/service-worker.js"
+}
