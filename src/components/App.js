@@ -3,6 +3,7 @@ import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
 import moment from 'moment';
 import DataInput from './DataInput';
 import HomeOrAwayRadioBtns from './HomeOrAwayRadioBtns';
+import TeamsCheckBox from './TeamsCheckBox';
 
 export default class App extends Component {
 
@@ -15,11 +16,9 @@ export default class App extends Component {
       homeOrAway: 'both',
       plotData: []
     }
-    this.handleDataInput = this.handleDataInput.bind(this);
-    this.handleHomeOrAwayRadioBtns = this.handleHomeOrAwayRadioBtns.bind(this);
   }
 
-  handleDataInput(event) {
+  handleDataInput = (event) => {
     function parseData(data) {
       data = data.split('\n');
 
@@ -48,11 +47,11 @@ export default class App extends Component {
     this.setState({data: parseData(event.target.value)}, () => this.updatePlotData());
   }
 
-  handleHomeOrAwayRadioBtns(e) {
+  handleHomeOrAwayRadioBtns = (e) => {
     this.setState({homeOrAway: e.target.value}, () => this.updatePlotData());
   }
 
-  handleTeamSelect(team) {
+  handleTeamSelect = (team) => {
     const selectedTeams = this.state.selectedTeams
     selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
     this.setState({selectedTeams: selectedTeams}, () => this.updatePlotData());
@@ -75,19 +74,6 @@ export default class App extends Component {
 
   render() {
     console.log('App State', this.state);
-
-    const teamsCheckBox = Object.keys(this.state.data).map(team => {
-      return (
-        <div key = {team} >
-          <input
-            type = "checkbox"
-            name = {team}
-            value = {team}
-            onChange = {(e) => this.handleTeamSelect(e.target.value)}
-          />{team}
-        </div>
-      )
-    }); 
 
     const scatters = Array.from(this.state.selectedTeams).map((team) => {
       return (
@@ -112,7 +98,10 @@ export default class App extends Component {
           handleHomeOrAwayRadioBtns = {this.handleHomeOrAwayRadioBtns}
         />
 
-        {teamsCheckBox}
+        <TeamsCheckBox
+          data={this.state.data}
+          handleTeamSelect={this.handleTeamSelect}
+        />
 
         <ScatterChart width={700} height={600}>
 
