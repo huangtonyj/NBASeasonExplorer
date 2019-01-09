@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {LineChart, XAxis, YAxis, Line} from 'recharts';
-// import Chart from './Chart';
 
 export default class App extends Component {
 
@@ -29,25 +28,12 @@ export default class App extends Component {
         visitorPts = rowData[3]
         homeTeam = rowData[4];
         homePts = rowData[5];
-        
-        // if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
-        // if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
-      
-        // result[visitorTeam]['away'].push({date: new Date(date), pts: parseInt(visitorPts)});
-        // result[homeTeam]['home'].push({date: new Date(date), pts: parseInt(homePts)});
-
-        // if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
-        // if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
-      
-        // result[visitorTeam]['away'][date] = parseInt(visitorPts);
-        // result[homeTeam]['home'][date] = parseInt(homePts);
 
         if (!result[visitorTeam]) { result[visitorTeam] = []}
         if (!result[homeTeam]) { result[homeTeam] = []}
 
         result[visitorTeam].push({date: date, pts: visitorPts, homeOrAway: 'away', opponent: homeTeam}) 
         result[homeTeam].push({ date: date, pts: homePts, homeOrAway: 'home', opponent: visitorTeam}) 
-        
       }
 
       delete result[undefined] // bad data?
@@ -68,8 +54,7 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    const plotData = {};
-    // let plotData;
+    let plotData = {};
     
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
@@ -79,28 +64,21 @@ export default class App extends Component {
         case 'away':
           plotData[team] = this.state.data[team].away;
           break;
-        default:
-          // plotData[team] = this.state.data[team].home.concat(this.state.data[team].away);
-          // plotData = this.state.data[team].home.concat(this.state.data[team].away);
-          
+        default:          
           this.state.data[team].forEach(game => {
             if (!plotData[game.date]) {plotData[game.date] = {};}
             plotData[game.date] = Object.assign( plotData[game.date], {[team]: game.pts})
           })
-          
-          
-
-
-          break;
         }
     })
+    
+    plotData = Object.keys(plotData).map((date) => Object.assign({date: date}, plotData[date]));
 
     this.setState({ plotData: plotData });
   }
 
   render() {
     console.log('App State', this.state);
-    // console.log(this.state.plotData);   
 
     const homeOrAwayRadioBtns = (
       <div>
@@ -136,16 +114,13 @@ export default class App extends Component {
         </div>
       )
     }); 
-    
-    const lines = Object.keys(this.state.plotData).map((team) => {
+
+    const lines = Array.from(this.state.selectedTeams).map((team) => {
       return (
-        < Line
-          type = "monotone"
-          // stroke={null}
-          // strokeWidth="2"
-          // dot={false}
-          stroke = "#8884d8"
-          dataKey = "pts"
+        <Line
+          type="monotone"
+          stroke="#8884d8"
+          dataKey={team}
         />
       )
     });
@@ -166,10 +141,6 @@ export default class App extends Component {
 
         {teamsCheckBox}
 
-        {/* <Chart 
-          plotData={this.state.plotData}
-        /> */}
-
         <LineChart
           width={700}
           height={600}
@@ -178,14 +149,8 @@ export default class App extends Component {
           <XAxis dataKey="date"/>
           <YAxis/>
 
-          {/* <Line
-            type="monotone"
-            stroke = "#8884d8"
-            dataKey="pts"
-          /> */}
-
           {lines}
-
+          
         </LineChart>
 
       </div>
