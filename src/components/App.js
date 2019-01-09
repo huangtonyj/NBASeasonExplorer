@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import Chart from './Chart';
+import React, { Component } from 'react';
+import {LineChart, XAxis, YAxis, Line} from 'recharts';
+// import Chart from './Chart';
 
 export default class App extends Component {
 
@@ -54,7 +55,8 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    const theData = {};
+    // const theData = {};
+    let theData;
     
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
@@ -65,7 +67,8 @@ export default class App extends Component {
           theData[team] = this.state.data[team].away;
           break;
         default:
-          theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
+          // theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
+          theData = this.state.data[team].home.concat(this.state.data[team].away);
           break;
         }
     })
@@ -110,7 +113,20 @@ export default class App extends Component {
           />{team}
         </div>
       )
-    });   
+    }); 
+    
+    // const lines = Object.keys(this.state.plotData).map((team) => {
+    //   return (
+    //     < Line
+    //       type = "monotone"
+    //       // stroke={null}
+    //       // strokeWidth="2"
+    //       // dot={false}
+    //       stroke = "#8884d8"
+    //       dataKey = "pts"
+    //     />
+    //   )
+    // });
 
     return (
       <div>
@@ -128,9 +144,27 @@ export default class App extends Component {
 
         {teamsCheckBox}
 
-        <Chart 
+        {/* <Chart 
           plotData={this.state.plotData}
-        />
+        /> */}
+
+        <LineChart
+          width={700}
+          height={600}
+          data={this.state.plotData}>
+
+          <XAxis dataKey="date"/>
+          <YAxis/>
+
+          <Line
+            type="monotone"
+            stroke = "#8884d8"
+            dataKey="pts"
+          />
+
+          {/* {lines} */}
+
+        </LineChart>
 
       </div>
     )
