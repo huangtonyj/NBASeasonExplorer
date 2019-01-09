@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
 import moment from 'moment';
 import DataInput from './DataInput';
+import HomeOrAwayRadioBtns from './HomeOrAwayRadioBtns';
 
 export default class App extends Component {
 
@@ -15,6 +16,7 @@ export default class App extends Component {
       plotData: []
     }
     this.handleDataInput = this.handleDataInput.bind(this);
+    this.handleHomeOrAwayRadioBtns = this.handleHomeOrAwayRadioBtns.bind(this);
   }
 
   handleDataInput(event) {
@@ -74,28 +76,6 @@ export default class App extends Component {
   render() {
     console.log('App State', this.state);
 
-    const homeOrAwayRadioBtns = (
-      <div>
-        <input type="radio" name="homeOrAway" 
-          value="both" 
-          checked={this.state.homeOrAway === "both" ? "checked" : ""}
-          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
-          />Both
-
-        <input type="radio" name="homeOrAway" 
-          value="home" 
-          checked={this.state.homeOrAway === "home" ? "checked" : ""}
-          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
-          />Home
-
-        <input type="radio" name="homeOrAway" 
-          value="away" 
-          checked={this.state.homeOrAway === "away" ? "checked" : ""}
-          onChange={(e) => this.handleHomeOrAwayRadioBtns(e)}
-        />Away
-      </div>
-    );
-
     const teamsCheckBox = Object.keys(this.state.data).map(team => {
       return (
         <div key = {team} >
@@ -127,7 +107,10 @@ export default class App extends Component {
 
         <DataInput handleDataInput = {this.handleDataInput}/>
 
-        {homeOrAwayRadioBtns}
+        <HomeOrAwayRadioBtns
+          homeOrAway={this.state.homeOrAway}
+          handleHomeOrAwayRadioBtns = {this.handleHomeOrAwayRadioBtns}
+        />
 
         {teamsCheckBox}
 
