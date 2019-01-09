@@ -13,10 +13,10 @@ export default class App extends Component {
       data: {},
       selectedTeams: new Set(),
       homeOrAway: 'both',
-      plotData: []
     }
   }
 
+  // Parse input data
   handleDataInput = (event) => {
     function parseData(data) {
       data = data.split('\n');
@@ -46,8 +46,10 @@ export default class App extends Component {
     this.setState({data: parseData(event.target.value)});
   }
 
+  // Set filter options
   handleHomeOrAwayRadioBtns = (e) => { this.setState({homeOrAway: e.target.value}); }
 
+  // Checkboxes for team selection
   handleTeamSelect = (team) => {
     const selectedTeams = this.state.selectedTeams
     selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team)
@@ -55,8 +57,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log('App State', this.state);
-
     return (
       <div>
         <h1> Basketball Season Explorer </h1>
