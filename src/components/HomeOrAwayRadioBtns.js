@@ -9,13 +9,13 @@ export default function HomeOrAwayRadioBtns({
         value="both" 
         checked={homeOrAway === "both" ? "checked" : ""}
         onChange={(e) => handleHomeOrAwayRadioBtns(e)}
-        />Both
+        />Both <br/>
 
       <input type="radio" name="homeOrAway" 
         value="home" 
         checked={homeOrAway === "home" ? "checked" : ""}
         onChange={(e) => handleHomeOrAwayRadioBtns(e)}
-        />Home
+        />Home <br/>
 
       <input type="radio" name="homeOrAway" 
         value="away" 

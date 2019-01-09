@@ -58,20 +58,22 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
-        <h1> Basketball Season Explorer </h1>
+      <div id='App'>
+        
 
+        <div className="controls">
         <DataInput handleDataInput = {this.handleDataInput}/>
 
         <HomeOrAwayRadioBtns
           homeOrAway={this.state.homeOrAway}
           handleHomeOrAwayRadioBtns = {this.handleHomeOrAwayRadioBtns}
-        />
+          />
 
         <TeamsCheckBox
           data={this.state.data}
           handleTeamSelect={this.handleTeamSelect}
-        />
+          />
+        </div>
 
         <Chart
           selectedTeams={this.state.selectedTeams}
