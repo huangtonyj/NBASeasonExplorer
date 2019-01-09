@@ -10,7 +10,7 @@ export default class App extends Component {
       data: {},
       selectedTeams: new Set(),
       homeOrAway: 'both',
-      plotData: {}
+      plotData: []
     }
   }
 
@@ -29,11 +29,17 @@ export default class App extends Component {
         homeTeam = rowData[4];
         homePts = rowData[5];
 
-        if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
-        if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
+        // if (!result[visitorTeam]) { result[visitorTeam] = { home: {}, away: {} }}
+        // if (!result[homeTeam]) { result[homeTeam] = { home: {}, away: {} }}
       
-        result[visitorTeam]['away'][date] = visitorPts;
-        result[homeTeam]['home'][date] = homePts;
+        // result[visitorTeam]['away'][date] = visitorPts;
+        // result[homeTeam]['home'][date] = homePts;
+        
+        if (!result[visitorTeam]) { result[visitorTeam] = { home: [], away: [] }}
+        if (!result[homeTeam]) { result[homeTeam] = { home: [], away: [] }}
+      
+        result[visitorTeam]['away'].push({date: date, pts: visitorPts});
+        result[homeTeam]['home'].push({date: date, pts: homePts});
       }
 
       delete result[undefined] // bad data?
@@ -54,30 +60,67 @@ export default class App extends Component {
   }
 
   updatePlotData() {
-    const plotData = {};
-    console.log('plotData', plotData)
+    
+    // console.log('theData', theData)
 
+    const theData = {};
     this.state.selectedTeams.forEach((team) => { 
       switch (this.state.homeOrAway) {
-        case 'both':
-          console.log('plot both data');          
-          plotData[team] = Object.assign(this.state.data[team].home, this.state.data[team].away);
+        case 'home':
+          // console.log('plot home data');
+          // theData[team] = this.state.data[team].home;
+          theData[team] = this.state.data[team].home;
           break;
         case 'away':
-          console.log('plot away data');          
-          plotData[team] = this.state.data[team].away;
+          // console.log('plot away data');          
+          // theData[team] = Object.values(this.state.data[team].away);
+          theData[team] = this.state.data[team].away;
           break;
         default:
-          console.log('plot home data');
-          plotData[team] = this.state.data[team].home;
+          // console.log('plot both data');          
+          // theData[team] = Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home));
+          
+            theData[team] = this.state.data[team].home.concat(this.state.data[team].away);
+            // date: Object.keys(this.state.data[team].away).concat(Object.keys(this.state.data[team].home)),
+            // pts: Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home))
+        
+          break;
         }
     })
+    // this.state.selectedTeams.forEach((team) => { 
+    //   switch (this.state.homeOrAway) {
+    //     case 'home':
+    //       // console.log('plot home data');
+    //       // theData[team] = this.state.data[team].home;
+    //       theData[team] = {
+    //         date: Object.keys(this.state.data[team].home),
+    //         pts: Object.values(this.state.data[team].home)
+    //       }
+    //       break;
+    //     case 'away':
+    //       // console.log('plot away data');          
+    //       // theData[team] = Object.values(this.state.data[team].away);
+    //       theData[team] = {
+    //         date: Object.keys(this.state.data[team].away),
+    //         pts: Object.values(this.state.data[team].away)
+    //       }
+    //       break;
+    //     default:
+    //       // console.log('plot both data');          
+    //       // theData[team] = Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home));
+    //       theData[team] = {
+    //         date: Object.keys(this.state.data[team].away).concat(Object.keys(this.state.data[team].home)),
+    //         pts: Object.values(this.state.data[team].away).concat(Object.values(this.state.data[team].home))
+    //       }
+    //       break;
+    //     }
+    // })
 
-    this.setState({ plotData: plotData });
+    this.setState({ plotData: theData });
   }
 
   render() {
-    console.log(this.state);
+    // console.log('App State', this.state);
     // console.log(this.state.plotData);   
 
     const homeOrAwayRadioBtns = (
@@ -121,7 +164,7 @@ export default class App extends Component {
 
         <textarea 
           rows = "2"
-          cols = "50"
+          cols = "30"
           placeholder="Input data here"
           onChange={(e) => this.handleDataInput(e)}
         >
