@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
 import moment from 'moment';
+import DataInput from './DataInput';
 
 export default class App extends Component {
 
@@ -13,6 +14,7 @@ export default class App extends Component {
       homeOrAway: 'both',
       plotData: []
     }
+    this.handleDataInput = this.handleDataInput.bind(this);
   }
 
   handleDataInput(event) {
@@ -123,13 +125,7 @@ export default class App extends Component {
       <div>
         <h1> Basketball Season Explorer </h1>
 
-        <textarea 
-          rows = "2"
-          cols = "30"
-          placeholder="Input data here"
-          onChange={(e) => this.handleDataInput(e)}
-        >
-        </textarea>
+        <DataInput handleDataInput = {this.handleDataInput}/>
 
         {homeOrAwayRadioBtns}
 
