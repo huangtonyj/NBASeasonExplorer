@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
-import moment from 'moment';
+// import {ScatterChart, XAxis, YAxis, Scatter, Legend} from 'recharts';
+// import moment from 'moment';
 import DataInput from './DataInput';
 import HomeOrAwayRadioBtns from './HomeOrAwayRadioBtns';
 import TeamsCheckBox from './TeamsCheckBox';
+import Chart from './Chart';
 
 export default class App extends Component {
 
@@ -75,18 +76,6 @@ export default class App extends Component {
   render() {
     console.log('App State', this.state);
 
-    const scatters = Array.from(this.state.selectedTeams).map((team) => {
-      return (
-        <Scatter
-          key={team}
-          name={team}
-          data={this.state.plotData[team]}
-          fill="#8884d8"
-          line
-        />
-      )
-    });
-
     return (
       <div>
         <h1> Basketball Season Explorer </h1>
@@ -103,23 +92,10 @@ export default class App extends Component {
           handleTeamSelect={this.handleTeamSelect}
         />
 
-        <ScatterChart width={700} height={600}>
-
-          <XAxis
-            dataKey='date'
-            domain={['auto', 'auto']}
-            name='Date'
-            tickFormatter={(unixTime) => moment(unixTime).format('MMM Do YY')}
-            type='number'
-          />
-
-          <YAxis dataKey="pts"/>
-
-          <Legend/>
-
-          {scatters}
-          
-        </ScatterChart>
+        <Chart
+          selectedTeams={this.state.selectedTeams}
+          plotData={this.state.plotData}
+        />
 
       </div>
     )
